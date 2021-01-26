@@ -10,6 +10,7 @@ Q. 검색어를 입력하는 동시에 DB에 저장되어 있는 유관 검색�
 
 
 2. 검색 필드를 벗어나면 출력된 리스트는 사라진다.
+![요구사항 두번째](./src/solution/presenter/auto-complete/assets/auto_complete_scope2.png)
 
 
 ## 기능 작동 이미지
