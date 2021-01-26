@@ -6,7 +6,7 @@ Q. 검색어를 입력하는 동시에 DB에 저장되어 있는 유관 검색�
 ## 기능 요구사항
 
 1. 키보드 이벤트를 지연시간(debounce 기능)을 통해 request 횟수를 줄인다.
-![요구사항 첫번째](./src/solution/presenter/dropdown/assets/auto_complete_scope1.png)
+![요구사항 첫번째](./src/solution/presenter/auto-complete/assets/auto_complete_scope1.png)
 
 
 2. 검색 필드를 벗어나면 출력된 리스트는 사라진다.
