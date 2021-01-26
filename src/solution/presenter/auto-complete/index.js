@@ -122,7 +122,7 @@ export class AutoComplete {
             
         }, this.delayTime);
 
-        // TODO: question
+        // input 에서 focusout 이벤트 발생 시 출력된 리스트를 숨긴다.
         this.textinputElement.addEventListener('focusout', () => {
             this.hiddenElement(this.searchListElement);
         });
