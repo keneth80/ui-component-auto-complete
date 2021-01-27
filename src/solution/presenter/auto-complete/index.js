@@ -1,4 +1,4 @@
-import { debounce } from './util';
+import { debounce, getElementIndex } from './util';
 import { RequestMockAdapter } from './mock'; 
 
 /*
@@ -96,7 +96,7 @@ export class AutoComplete {
             left: ${inputRect.left}px;
         `;
 
-        return selector;
+        return document.querySelectorAll('.auto-complete-item-box');
     }
 
     /*
@@ -104,6 +104,7 @@ export class AutoComplete {
     * description: 모든 이벤트를 처리한다.
     */
     eventBinding() {
+        let isListBoxFocus = false;
         const requestAdapter = new RequestMockAdapter();
         const dispatchEvent = debounce((targetText) => {
             // 공백 제거 후 단어가 있다면 호출한다.
@@ -114,7 +115,13 @@ export class AutoComplete {
                         this.displayWordList(
                             this.searchListElement,
                             result
-                        );
+                        ).forEach((element) => {
+                            element.addEventListener('click', (event) => {
+                                const targetIndex = getElementIndex(document.querySelectorAll('.auto-complete-item-box'), element);
+                                this.textinputElement.value = result[targetIndex].text;
+                                this.hiddenElement(this.searchListElement);
+                            });
+                        });
                     });
             } else {
                 this.hiddenElement(this.searchListElement);
@@ -124,11 +131,28 @@ export class AutoComplete {
 
         // input 에서 focusout 이벤트 발생 시 출력된 리스트를 숨긴다.
         this.textinputElement.addEventListener('focusout', () => {
+            if (isListBoxFocus) return;
             this.hiddenElement(this.searchListElement);
         });
 
+        // 필드에 마우스 포인터가 오면 리스트를 불러온다.
+        this.textinputElement.addEventListener('focusin', (event) => {
+            dispatchEvent(event.target.value);
+        });
+
+        // 키보드 이벤트
         this.textinputElement.addEventListener('keyup', (event) => {
             dispatchEvent(event.target.value);
+        });
+
+        // focusout 이 되면 리스트가 사라지므로 리스트에 포인터가 머물러 있을 시에는 focusout 이벤트가 일어나도 리스트를 유지하기 위함
+        this.searchListElement.addEventListener('mouseover', () => {
+            isListBoxFocus = true;
+        });
+
+        // 포인터가 리스트에서 떠나면 focusout 이벤트 시 리스트 사라짐
+        this.searchListElement.addEventListener('mouseout', () => {
+            isListBoxFocus = false;
         });
     }
 
