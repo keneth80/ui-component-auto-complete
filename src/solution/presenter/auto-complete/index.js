@@ -1,4 +1,4 @@
-import { debounce, getElementIndex } from './util';
+import { debounce } from './util';
 import { RequestMockAdapter } from './mock'; 
 
 /*
@@ -22,7 +22,7 @@ export class AutoComplete {
 
         // 설정정보
         // delayTime setup
-        this.delayTime = configuration.delayTime ?? this.DEFAULT_DELAY_TIME;
+        this.delayTime = configuration.delayTime || this.DEFAULT_DELAY_TIME;
 
         // request url
         this.requestUrl = configuration.request.url;
@@ -44,7 +44,7 @@ export class AutoComplete {
     displayInputElement(selector, configuration) {
         const textinput = document.createElement('input');
         textinput.setAttribute('type', 'text');
-        textinput.setAttribute('placeholder', configuration.placeholder ?? 'Please enter');
+        textinput.setAttribute('placeholder', configuration.placeholder || 'Please enter');
         textinput.classList.add('auto-complete-input');
         selector.appendChild(textinput);
         // 생성된 input element를 리턴해준다.
@@ -115,10 +115,9 @@ export class AutoComplete {
                         this.displayWordList(
                             this.searchListElement,
                             result
-                        ).forEach((element) => {
+                        ).forEach((element, index) => {
                             element.addEventListener('click', (event) => {
-                                const targetIndex = getElementIndex(document.querySelectorAll('.auto-complete-item-box'), element);
-                                this.textinputElement.value = result[targetIndex].text;
+                                this.textinputElement.value = result[index].text;
                                 this.hiddenElement(this.searchListElement);
                             });
                         });

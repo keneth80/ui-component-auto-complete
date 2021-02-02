@@ -54,7 +54,7 @@ const request = {
     ]
 }
 
-export class RequestAdapter {
+export class RequestMockAdapter {
     constructor() {}
 
     get(url, param) {

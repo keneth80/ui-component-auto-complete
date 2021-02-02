@@ -1,5 +1,6 @@
 import { debounce } from './util';
 import { RequestMockAdapter } from './mock'; 
+import { getElementIndex } from '../../solution/presenter/auto-complete/util';
 
 /*
 * title: AutoComplete class
@@ -17,12 +18,10 @@ export class AutoComplete {
         // 내부변수
         // default delay time
         this.DEFAULT_DELAY_TIME = 500;
-        // rxjs subscription (구독을 해제하기 위한 변수)
-        this.subscription = null;
 
         // 설정정보
         // delayTime setup
-        this.delayTime = configuration.delayTime ?? this.DEFAULT_DELAY_TIME;
+        this.delayTime = configuration.delayTime || this.DEFAULT_DELAY_TIME;
 
         // request url
         this.requestUrl = configuration.request.url;
@@ -44,7 +43,7 @@ export class AutoComplete {
     displayInputElement(selector, configuration) {
         const textinput = document.createElement('input');
         textinput.setAttribute('type', 'text');
-        textinput.setAttribute('placeholder', configuration.placeholder ?? 'Please enter');
+        textinput.setAttribute('placeholder', configuration.placeholder || 'Please enter');
         textinput.classList.add('auto-complete-input');
         selector.appendChild(textinput);
         // 생성된 input element를 리턴해준다.
@@ -98,12 +97,13 @@ export class AutoComplete {
     * description: 모든 이벤트를 처리한다.
     */
     eventBinding() {
+        let listOver = false;
         const requestAdapter = new RequestMockAdapter();
 
         this.textinputElement.addEventListener('keyup', (event) => {
             // q3. debounce 기능을 통해 request 호출을 최소화 하시오.
             // TODO: debounce적용하여 리스트 출력
-            requestAdapter.get(this.requestUrl, event.target.value)
+            requestAdapter.get(this.requestUrl, targetText)
                 .then((result) => {
                     this.displayWordList(
                         this.searchListElement,
